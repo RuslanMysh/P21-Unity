@@ -4,8 +4,29 @@ using UnityEngine.EventSystems;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Debug.LogError("На уровне больше одного игрока! Синглтон сломался");
+        }
+
+        Instance = this;
+    }
+
+    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+
+    public class OnSelectedCounterChangedEventArgs : EventArgs
+    {
+        public ClearCounter selectedCounter;
+    }
+
     [SerializeField]
     private GameInput gameInput;
+
+    private ClearCounter selectedCounter;
 
     [SerializeField]
     private float speed = 10f;
@@ -28,7 +49,7 @@ public class Player : MonoBehaviour
     private void Update()
     {
         HandleMovement();
-        //HandleInteractions();
+        HandleInteractions();
     }
 
     private void HandleInteractions()
@@ -48,8 +69,19 @@ public class Player : MonoBehaviour
             if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
                 // Has ClearCounter
-                clearCounter.Interact();
+                if (clearCounter != selectedCounter)
+                {
+                    SetSelectedCounter(clearCounter);
+                }
             }
+            else
+            {
+                SetSelectedCounter(null);
+            }
+        }
+        else
+        {
+            SetSelectedCounter(null);
         }
     }
 
@@ -109,23 +141,19 @@ public class Player : MonoBehaviour
     }
     private void GameInput_OnInteractAction(object sender, EventArgs e)
     {
-        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
-        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
-
-        if (moveDir != Vector3.zero)
+        if (selectedCounter != null)
         {
-            lastInteractionDir = moveDir;
+            selectedCounter.Interact();
         }
+    }
 
-        float interactDistance = 2f;
-        if (Physics.Raycast(transform.position, lastInteractionDir,
-            out RaycastHit raycastHit, interactDistance, counterMask))
+    private void SetSelectedCounter(ClearCounter selectedCounter)
+    {
+        this.selectedCounter = selectedCounter;
+
+        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
         {
-            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
-            {
-                // Has ClearCounter
-                clearCounter.Interact();
-            }
-        }
+            selectedCounter = this.selectedCounter
+        });
     }
 }
