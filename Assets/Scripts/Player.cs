@@ -6,16 +6,6 @@ public class Player : MonoBehaviour
 {
     public static Player Instance { get; private set; }
 
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("На уровне больше одного игрока! Синглтон сломался");
-        }
-
-        Instance = this;
-    }
-
     public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
 
     public class OnSelectedCounterChangedEventArgs : EventArgs
@@ -44,6 +34,16 @@ public class Player : MonoBehaviour
 
     public bool IsWalking { get; private set; }
     public bool IsSprinting { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Debug.LogError("На уровне больше одного игрока! Синглтон сломался");
+        }
+
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -166,9 +166,9 @@ public class Player : MonoBehaviour
             selectedCounter.Interact();
         }
     }
-    private void SetSelectedCounter(ClearCounter selectedCounter)
+    private void SetSelectedCounter(ClearCounter clearCounter)
     {
-        this.selectedCounter = selectedCounter;
+        selectedCounter = clearCounter;
 
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
         {
