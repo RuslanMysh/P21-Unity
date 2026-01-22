@@ -32,6 +32,9 @@ public class Player : MonoBehaviour
     private float speed = 10f;
 
     [SerializeField]
+    private float sprintModifier = 1.5f;
+
+    [SerializeField]
     private float rotationSpeed = 10f;
 
     [SerializeField]
@@ -40,10 +43,23 @@ public class Player : MonoBehaviour
     private Vector3 lastInteractionDir;
 
     public bool IsWalking { get; private set; }
+    public bool IsSprinting { get; private set; }
 
     private void Start()
     {
         gameInput.OnInteractAction += GameInput_OnInteractAction;
+        gameInput.OnSprintStarted += GameInput_OnSprintStarted;
+        gameInput.OnSprintCancelled += GameInput_OnSprintCancelled;
+    }
+
+    private void GameInput_OnSprintStarted(object sender, EventArgs e)
+    {
+        IsSprinting = true;
+    }
+
+    private void GameInput_OnSprintCancelled(object sender, EventArgs e)
+    {
+        IsSprinting = false;
     }
 
     private void Update()
@@ -99,6 +115,8 @@ public class Player : MonoBehaviour
 
         IsWalking = moveDir != Vector3.zero;
 
+        //if (!IsWalking) { IsSprinting = false; }
+
         if (!canMove)
         {
             //пробуем двинуться по X
@@ -134,7 +152,9 @@ public class Player : MonoBehaviour
 
         if (canMove)
         {
-            transform.position += speed * moveDir * Time.deltaTime;
+            float speedModifier;
+            speedModifier = IsSprinting ? sprintModifier : 1;
+            transform.position += speed * speedModifier * moveDir * Time.deltaTime;
         }
 
         transform.forward = Vector3.Slerp(transform.forward, moveDir, rotationSpeed * Time.deltaTime);
@@ -146,7 +166,6 @@ public class Player : MonoBehaviour
             selectedCounter.Interact();
         }
     }
-
     private void SetSelectedCounter(ClearCounter selectedCounter)
     {
         this.selectedCounter = selectedCounter;

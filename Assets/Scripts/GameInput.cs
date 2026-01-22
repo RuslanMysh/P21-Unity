@@ -4,6 +4,8 @@ using UnityEngine;
 public class GameInput : MonoBehaviour
 {
     public event EventHandler OnInteractAction;
+    public event EventHandler OnSprintStarted;
+    public event EventHandler OnSprintCancelled;
 
     private PlayerInputActions inputActions;
 
@@ -13,8 +15,20 @@ public class GameInput : MonoBehaviour
         inputActions.Player.Enable();
 
         inputActions.Player.Interact.performed += Interact_performed;
+        inputActions.Player.Sprint.started += Sprint_started;
+        inputActions.Player.Sprint.canceled += Sprint_canceled;
+    }
+    private void Sprint_started(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnSprintStarted?.Invoke(this, EventArgs.Empty);
     }
 
+    private void Sprint_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnSprintCancelled?.Invoke(this, EventArgs.Empty);
+    }
+
+  
     private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         OnInteractAction?.Invoke(this, EventArgs.Empty);
