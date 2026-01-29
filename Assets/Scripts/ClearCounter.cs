@@ -1,49 +1,32 @@
 using UnityEngine;
 
-public class ClearCounter : MonoBehaviour, IKitchenObjectParent
+public class ClearCounter : BaseCounter
 {
     [SerializeField] private KitchenObjectSO kitchenObjectSO;
-    [SerializeField] private Transform counterTopPoint;
 
-    private KitchenObject kitchenObject;
-
-    public void Interact(Player player)
+    public override void Interact(Player player)
     {
-        if (kitchenObject == null)
+       if (!HasKitchenObject())
         {
-            Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab, counterTopPoint);
-
-            kitchenObjectTransform.GetComponent<KitchenObject>().SetKitchenObjectParent(this);
+            // на тумбе ничего не лежит
+            if (player.HasKitchenObject())
+            {
+                // у игрока есть в руках объект
+                player.GetKitchenObject().SetKitchenObjectParent(this);
+            }
         }
-        else
-        {
-            // отдаем объект игроку в руки
-            kitchenObject.SetKitchenObjectParent(player);
+       else
+        {  
+            // на тумбочке есть объект
+            if (player.HasKitchenObject())
+            {
+                // у игрока уже есть объект в руках
+            }
+            else
+            {
+                // у игрока ничего нет в руках
+                GetKitchenObject().SetKitchenObjectParent(player);
+            }
         }
-    }
-
-    public KitchenObject GetKitchenObject()
-    {
-        return kitchenObject;
-    }
-
-    public void ClearKitchenObject()
-    {
-        kitchenObject = null;
-    }
-
-    public bool HasKitchenObject()
-    {
-        return kitchenObject != null;
-    }
-
-    public Transform GetKitchenObjectFollowTransform()
-    {
-        return counterTopPoint;
-    }
-
-    public void SetKitchenObject(KitchenObject kitchenObject)
-    {
-        this.kitchenObject = kitchenObject;
     }
 }
