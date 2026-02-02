@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 {
-    // TODO:
-    // 4. добавить анимацию
-
     private KitchenObject kitchenObject;
     [SerializeField] private Transform counterTopPoint;
 
@@ -13,6 +10,11 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     public virtual void Interact(Player player)
     {
         Debug.LogError("BaseCounter.Interact() была вызвана");
+    }
+
+    public virtual void InteractAlternate(Player player)
+    {
+        Debug.LogError("BaseCounter.InteractAlternate() была вызвана");
     }
 
     public KitchenObject GetKitchenObject()
