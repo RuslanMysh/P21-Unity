@@ -5,6 +5,12 @@ public class CuttingCounter : BaseCounter
 {
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeSOArray;
 
+    public event EventHandler<OnProgressChangedEventArgs> OnProgressChanged;
+    public class OnProgressChangedEventArgs : EventArgs
+    {
+        public float progressNormalized;
+    }
+
     private int cuttingProgress;
 
     public override void Interact(Player player)
@@ -19,6 +25,11 @@ public class CuttingCounter : BaseCounter
                 {
                     player.GetKitchenObject().SetKitchenObjectParent(this);
                     cuttingProgress = 0;
+
+                    OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs
+                    {
+                        progressNormalized = 0
+                    });
                 }
             }
         }
@@ -45,6 +56,11 @@ public class CuttingCounter : BaseCounter
 
             CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
 
+            OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs
+            {
+                progressNormalized = (float) cuttingProgress / cuttingRecipeSO.cuttingProgressMax
+            });
+
             if (cuttingProgress >= cuttingRecipeSO.cuttingProgressMax)
             {
                 KitchenObjectSO cutKitchenObjectSO = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
@@ -56,6 +72,11 @@ public class CuttingCounter : BaseCounter
         }
     }
 
+    /// <summary>
+    /// принимает объект для нарезки и достает из рецепта результат нарезки 
+    /// </summary>
+    /// <param name="inputKitchenObjectSO">объект для нарезки</param>
+    /// <returns>нарезанная версия</returns>
     private KitchenObjectSO GetOutputForInput(KitchenObjectSO inputKitchenObjectSO)
     {
         CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(inputKitchenObjectSO);
