@@ -14,34 +14,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentVersion: 1.01
   subtype: kitchenchaos
-  lastShownTimestamp: 1770201773
+  lastShownTimestamp: 1770291677
   lastUpdateResponse:
     version: 1.01
     versionUrl: https://unitycodemonkey.com
-  checkedLastUpdateTimestamp: 1770201773
+  checkedLastUpdateTimestamp: 1770291677
   lastQOTDResponse:
-    questionId: 268
-    questionText: 'Is this valid code?
-
-      <p>string state = (health &gt; 0) ?
-      "ALIVE" : "DEAD";</p>'
-    answerA: Yes
-    answerB: No
-    answerC: 
-    answerD: 
+    questionId: 269
+    questionText: What is the correct way to show a variable in the Editor?
+    answerA: public int health;
+    answerB: public static int health;
+    answerC: '[SerializeField] private int health;'
+    answerD: private int health;
     answerE: 
-  lastQotdTimestamp: 1770201773
+  lastQotdTimestamp: 1770291677
   lastDynamicHeaderResponse:
     topImageUrl: https://codemonkeyexternal.blob.core.windows.net/external/Misc/gameDevReport_2.png
     topText: Stay up to date with the latest in Game Dev straight to your inbox!
     topLink: gamedevreport
     bottomText: My 10+ Years of C# Knowledge in 1 Course!
     bottomLink: csharpcourse
-  lastDynamicHeaderTimestamp: 1770201773
+  lastDynamicHeaderTimestamp: 1770291677
   websiteLatestMessage:
     text: <a href="https://cmonkey.co/freecourses">Check out all my FREE courses!
       Click here!</a>
-  websiteLatestMessageTimestamp: 1770201773
+  websiteLatestMessageTimestamp: 1770291677
   websiteLatestVideos:
     videos:
     - youTubeId: Vc_38R17zNs
@@ -52,4 +49,4 @@ MonoBehaviour:
       title: STUCK for HOURS trying to write Code? Watch this!
     - youTubeId: ZxPFiJgEQT0
       title: TOP 10 NEW Systems and Tools JANUARY 2026! | Unity Asset Store
-  websiteLatestVideosTimestamp: 1770201773
+  websiteLatestVideosTimestamp: 1770291677
