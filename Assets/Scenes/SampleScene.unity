@@ -1183,6 +1183,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1416944252}
   m_SourcePrefab: {fileID: 100100000, guid: 1c5dda3c7cd3cf742afcade5419faeab, type: 3}
+--- !u!114 &1034644800 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4677647884565529625, guid: 6eb0564ca5bfa284ba7e1fb51974f791, type: 3}
+  m_PrefabInstance: {fileID: 1536578300}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6765a6821a230f4f81cfa02f6a77d0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StoveCounter
 --- !u!1 &1079495261
 GameObject:
   m_ObjectHideFlags: 0
@@ -1448,6 +1459,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StoveCounter
       objectReference: {fileID: 0}
+    - target: {fileID: 5969517296267687261, guid: 6eb0564ca5bfa284ba7e1fb51974f791, type: 3}
+      propertyPath: stoveCounter
+      value: 
+      objectReference: {fileID: 1034644800}
     - target: {fileID: 6826604154075327999, guid: 6eb0564ca5bfa284ba7e1fb51974f791, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6
@@ -1487,6 +1502,10 @@ PrefabInstance:
     - target: {fileID: 6826604154075327999, guid: 6eb0564ca5bfa284ba7e1fb51974f791, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763217130149211875, guid: 6eb0564ca5bfa284ba7e1fb51974f791, type: 3}
+      propertyPath: mode
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1728,6 +1747,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 990100180}
     m_Modifications:
+    - target: {fileID: 2579552962914032785, guid: 4bed1151b6bc47f4894aabb38062b8f5, type: 3}
+      propertyPath: kitchenObjectSO
+      value: 
+      objectReference: {fileID: 11400000, guid: a33298dce38285b46adafc74686f270b, type: 2}
     - target: {fileID: 7369103829658215776, guid: 4bed1151b6bc47f4894aabb38062b8f5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.5
