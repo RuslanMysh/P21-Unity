@@ -17,6 +17,12 @@ public class PlateIconsUI : MonoBehaviour
 
     private void UpdateVisual()
     {
+        foreach (Transform child in transform)
+        {
+            if (child == iconTemplate) continue;
+            Destroy(child.gameObject);
+        }
+
         foreach (KitchenObjectSO kitchenObjectSO in plateKitchenObject.GetKitchenObjectSOList())
         {
             Transform iconTransform = Instantiate(iconTemplate, transform);

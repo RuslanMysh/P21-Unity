@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3697646962811193466}
   - component: {fileID: 541826708350710377}
+  - component: {fileID: 6032225456496768968}
   m_Layer: 0
   m_Name: IconTemplate
   m_TagString: Untagged
@@ -51,6 +52,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlateIconsSingleUI
   image: {fileID: 5128328561354515923}
+--- !u!114 &6032225456496768968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2714131506512666229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a902a4767bdfda148a8303dd8307f65f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LookAtCamera
+  mode: 0
 --- !u!1 &4936458860350251769
 GameObject:
   m_ObjectHideFlags: 0
