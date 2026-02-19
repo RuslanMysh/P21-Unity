@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentVersion: 1.01
   subtype: kitchenchaos
-  lastShownTimestamp: 1771411568
+  lastShownTimestamp: 1771499970
   lastUpdateResponse:
     version: 1.01
     versionUrl: https://unitycodemonkey.com
-  checkedLastUpdateTimestamp: 1771411568
+  checkedLastUpdateTimestamp: 1771499970
   lastQOTDResponse:
     questionId: 273
     questionText: When you create a new script, do you always have to extend MonoBehaviour?
@@ -27,26 +27,26 @@ MonoBehaviour:
     answerC: Only if you want to use it as a Game Object Component
     answerD: 
     answerE: 
-  lastQotdTimestamp: 1771411568
+  lastQotdTimestamp: 1771499970
   lastDynamicHeaderResponse:
     topImageUrl: https://codemonkeyexternal.blob.core.windows.net/external/Misc/gameDevReport_2.png
     topText: Stay up to date with the latest in Game Dev straight to your inbox!
     topLink: gamedevreport
     bottomText: My 10+ Years of C# Knowledge in 1 Course!
     bottomLink: csharpcourse
-  lastDynamicHeaderTimestamp: 1771411568
+  lastDynamicHeaderTimestamp: 1771499970
   websiteLatestMessage:
     text: <a href="https://cmonkey.co/freecourses">Check out all my FREE courses!
       Click here!</a>
-  websiteLatestMessageTimestamp: 1771411568
+  websiteLatestMessageTimestamp: 1771499970
   websiteLatestVideos:
     videos:
+    - youTubeId: qzfsN2tm9ss
+      title: Add Photo Mode to your Games! (FREE Download, Players will LOVE it!)
     - youTubeId: cYM059zGSrs
       title: 100 Steam Game Marketing Questions Answered to help you find SUCCESS!
     - youTubeId: PBDBKTwZI8Y
       title: TOP 10 FREE NEW Assets FEBRUARY 2026!
     - youTubeId: Vb5BZu7TOIk
       title: 8 QUICK Game Dev Tips for SUCCESS!
-    - youTubeId: 4cG_gdjQ4no
-      title: TOP 10 NEW Games, Made with Unity! (JANUARY 2026)
-  websiteLatestVideosTimestamp: 1771411568
+  websiteLatestVideosTimestamp: 1771499970

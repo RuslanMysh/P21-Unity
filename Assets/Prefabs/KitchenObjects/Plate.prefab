@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8505175271044452486}
   - component: {fileID: 4812191432145054731}
   - component: {fileID: 592269296785210125}
+  - component: {fileID: 9133290468084643895}
   m_Layer: 0
   m_Name: PlateIconsUI
   m_TagString: Untagged
@@ -141,6 +142,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlateIconsUI
   plateKitchenObject: {fileID: 3560016835516655227}
   iconTemplate: {fileID: 3697646962811193466, guid: a2242a31b588e61469d18ca788656e0b, type: 3}
+--- !u!114 &9133290468084643895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4858729917280477099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a902a4767bdfda148a8303dd8307f65f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LookAtCamera
+  mode: 2
 --- !u!1 &5239032401653086349
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,6 +207,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 953e8f978877dea41897ab6126089de4, type: 2}
   - {fileID: 11400000, guid: 78879210ef72fdc419aa86c677f9e664, type: 2}
   - {fileID: 11400000, guid: 5426292dadda49a458136a153294ad2d, type: 2}
+  - {fileID: 11400000, guid: ba325802d00122e46b41cfe30a35fa44, type: 2}
 --- !u!1001 &6155235988059563989
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -313,7 +328,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3550707552663613203, guid: 10e39c981f2de6441b54efde32ced8f0, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3611271270719445377, guid: 10e39c981f2de6441b54efde32ced8f0, type: 3}
       propertyPath: m_IsActive
@@ -328,6 +343,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 6466250609444950578}
   m_SourcePrefab: {fileID: 100100000, guid: 10e39c981f2de6441b54efde32ced8f0, type: 3}
+--- !u!1 &4649784603273044769 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3550707552663613203, guid: 10e39c981f2de6441b54efde32ced8f0, type: 3}
+  m_PrefabInstance: {fileID: 8197114009269570610}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4649784604096556015 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3550707552375629789, guid: 10e39c981f2de6441b54efde32ced8f0, type: 3}
@@ -373,3 +393,5 @@ MonoBehaviour:
     gameObject: {fileID: 4649784605000749113}
   - kitchenObjectSO: {fileID: 11400000, guid: 78879210ef72fdc419aa86c677f9e664, type: 2}
     gameObject: {fileID: 4649784604771784685}
+  - kitchenObjectSO: {fileID: 11400000, guid: ba325802d00122e46b41cfe30a35fa44, type: 2}
+    gameObject: {fileID: 4649784603273044769}
