@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class CuttingCounter : BaseCounter, IHasProgress
 {
-    // плохая идея делать его синглтоном, но пока пойдет
-    //public static CuttingCounter Instance { get; private set; }
-
     public static event EventHandler OnAnyCut;
 
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeSOArray;
@@ -17,18 +14,6 @@ public class CuttingCounter : BaseCounter, IHasProgress
     }
 
     private int cuttingProgress;
-
-    //private void Awake()
-    //{
-    //    if (Instance == null)
-    //    {
-    //        Instance = this;
-    //    }
-    //    else
-    //    {
-    //        Debug.LogError("Больше одного CuttingCounter");
-    //    }
-    //}
 
     public override void Interact(Player player)
     {
@@ -117,5 +102,10 @@ public class CuttingCounter : BaseCounter, IHasProgress
             }
         }
         return null;
+    }
+
+    new public static void ResetStaticData()
+    {
+        OnAnyCut = null;
     }
 }
