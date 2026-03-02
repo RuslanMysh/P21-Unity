@@ -14,42 +14,47 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentVersion: 1.01
   subtype: kitchenchaos
-  lastShownTimestamp: 1772104394
+  lastShownTimestamp: 1772449197
   lastUpdateResponse:
     version: 1.01
     versionUrl: https://unitycodemonkey.com
-  checkedLastUpdateTimestamp: 1772104394
+  checkedLastUpdateTimestamp: 1772449197
   lastQOTDResponse:
-    questionId: 276
-    questionText: What is the difference between Application.dataPath and Application.persistentDataPath
-      on Windows?
-    answerA: No difference on Windows
-    answerB: Application.dataPath is the install folder and Application.persistentDataPath
-      is on the Registry
-    answerC: Application.dataPath is the install folder and Application.persistentDataPath
-      is on the User Data
+    questionId: 277
+    questionText: 'What is the value stored in percentage?
+
+      <p>int health =
+      25;</p>
+
+      <p>int healthMax = 100;</p>
+
+      <p>float percentage = health
+      / healthMax;</p>'
+    answerA: 0.25f
+    answerB: 0
+    answerC: 2.5f
     answerD: 
     answerE: 
-  lastQotdTimestamp: 1772104394
+  lastQotdTimestamp: 1772449197
   lastDynamicHeaderResponse:
     topImageUrl: https://codemonkeyexternal.blob.core.windows.net/external/Misc/gameDevReport_2.png
     topText: Stay up to date with the latest in Game Dev straight to your inbox!
     topLink: gamedevreport
     bottomText: My 10+ Years of C# Knowledge in 1 Course!
     bottomLink: csharpcourse
-  lastDynamicHeaderTimestamp: 1772104394
+  lastDynamicHeaderTimestamp: 1772449197
   websiteLatestMessage:
     text: <a href="https://cmonkey.co/freecourses">Check out all my FREE courses!
       Click here!</a>
-  websiteLatestMessageTimestamp: 1772104394
+  websiteLatestMessageTimestamp: 1772449197
   websiteLatestVideos:
     videos:
+    - youTubeId: XShVX_PBi1o
+      title: BEST NEW Visual Assets to INSPIRE YOU! (FEBRUARY 2026)
+    - youTubeId: RXf1jsXxWkg
+      title: Learn how to write PRO level code with this DEEP DIVE!
     - youTubeId: Lm_YTrn9KYc
       title: Unity HDRP is DEAD!
     - youTubeId: Ah2WF-_rZig
       title: Unity EXPLAINED in 200 SECONDS!
-    - youTubeId: FdyHnVIoQko
-      title: TOP 10 NEW Systems and Tools FEBRUARY 2026! | Unity Asset Store
-    - youTubeId: 0ER2bxCoP2Q
-      title: Unity CEO says AI will soon make ENTIRE games?
-  websiteLatestVideosTimestamp: 1772104394
+  websiteLatestVideosTimestamp: 1772449197
