@@ -14,47 +14,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentVersion: 1.01
   subtype: kitchenchaos
-  lastShownTimestamp: 1772449197
+  lastShownTimestamp: 1784615360
   lastUpdateResponse:
     version: 1.01
     versionUrl: https://unitycodemonkey.com
-  checkedLastUpdateTimestamp: 1772449197
+  checkedLastUpdateTimestamp: 1784615360
   lastQOTDResponse:
-    questionId: 277
-    questionText: 'What is the value stored in percentage?
-
-      <p>int health =
-      25;</p>
-
-      <p>int healthMax = 100;</p>
-
-      <p>float percentage = health
-      / healthMax;</p>'
-    answerA: 0.25f
-    answerB: 0
-    answerC: 2.5f
+    questionId: 324
+    questionText: What is JSON and what is it useful for?
+    answerA: JavaScript Over Node, programming pattern
+    answerB: JavaScript Object Notation, data format
+    answerC: Jumping-Signal Over Nonce, crypto concept
     answerD: 
     answerE: 
-  lastQotdTimestamp: 1772449197
+  lastQotdTimestamp: 1784615360
   lastDynamicHeaderResponse:
-    topImageUrl: https://codemonkeyexternal.blob.core.windows.net/external/Misc/gameDevReport_2.png
-    topText: Stay up to date with the latest in Game Dev straight to your inbox!
-    topLink: gamedevreport
-    bottomText: My 10+ Years of C# Knowledge in 1 Course!
-    bottomLink: csharpcourse
-  lastDynamicHeaderTimestamp: 1772449197
+    topImageUrl: https://codemonkeyexternal.blob.core.windows.net/external/Misc/summer2025CodeMonkeyBundle.png
+    topText: Get 80% OFF on ALL my Courses and Games!!!
+    topLink: summerbundle
+    bottomText: DONT MISS the latest important trends, sign up for my FREE Weekly
+      Newsletter!
+    bottomLink: gamedevreport
+  lastDynamicHeaderTimestamp: 1784615360
   websiteLatestMessage:
     text: <a href="https://cmonkey.co/freecourses">Check out all my FREE courses!
       Click here!</a>
-  websiteLatestMessageTimestamp: 1772449197
+  websiteLatestMessageTimestamp: 1784615360
   websiteLatestVideos:
     videos:
-    - youTubeId: XShVX_PBi1o
-      title: BEST NEW Visual Assets to INSPIRE YOU! (FEBRUARY 2026)
-    - youTubeId: RXf1jsXxWkg
-      title: Learn how to write PRO level code with this DEEP DIVE!
-    - youTubeId: Lm_YTrn9KYc
-      title: Unity HDRP is DEAD!
-    - youTubeId: Ah2WF-_rZig
-      title: Unity EXPLAINED in 200 SECONDS!
-  websiteLatestVideosTimestamp: 1772449197
+    - youTubeId: -qpKrATW4wM
+      title: TOP 10 FREE NEW Assets JULY 2026!
+    - youTubeId: IQlMciGDMTY
+      title: This method helps you find Game Ideas that make MILLIONS!
+    - youTubeId: zkKU7Vj5Syc
+      title: Do THIS to pick your next SUCCESSFUL game idea!
+    - youTubeId: NjNbIHHu9Z0
+      title: Steam Marketing EXPERT on how to find SUCCESS in 2026!
+  websiteLatestVideosTimestamp: 1784615360
