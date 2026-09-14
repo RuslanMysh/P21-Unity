@@ -5,8 +5,9 @@ using UnityEngine.UI;
 public class MainMenuUI : MonoBehaviour
 {
     [SerializeField] private Button playButton;
-    [SerializeField] private Button quitButton;
-
+    [SerializeField] private Button setButton;
+    [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private Button closeSettingsButton;
     private void Awake()
     {
         playButton.onClick.AddListener(() =>
@@ -14,11 +15,19 @@ public class MainMenuUI : MonoBehaviour
             Loader.Load(Loader.Scene.GameScene);
         });
 
-        quitButton.onClick.AddListener(() =>
+        setButton.onClick.AddListener(() =>
         {
-            Application.Quit();
+            settingsPanel.SetActive(true);
         });
 
+        closeSettingsButton.onClick.AddListener(() =>
+        {
+            settingsPanel.SetActive(false);
+        });
+
+        settingsPanel.SetActive(false);
         Time.timeScale = 1f;
+
+        
     }
 }

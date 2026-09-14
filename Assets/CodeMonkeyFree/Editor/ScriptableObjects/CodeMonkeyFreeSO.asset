@@ -14,42 +14,47 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentVersion: 1.01
   subtype: kitchenchaos
-  lastShownTimestamp: 1785075272
+  lastShownTimestamp: 1789389371
   lastUpdateResponse:
     version: 1.01
     versionUrl: https://unitycodemonkey.com
-  checkedLastUpdateTimestamp: 1785075272
+  checkedLastUpdateTimestamp: 1789389371
   lastQOTDResponse:
-    questionId: 325
-    questionText: 'Is this valid code?
+    questionId: 342
+    questionText: 'What is the result of this code:
 
-      <p>Color? myColor = null;</p>'
-    answerA: Yes
-    answerB: No, myColor is a struct and cannot be null
-    answerC: 
+      <p>int money = 2000000000;
+      // $2 billion</p>
+
+      <p>money += 1000000000; // Adding $1 billion</p>'
+    answerA: money == 3000000000
+    answerB: money == -1294967296
+    answerC: money == 0
     answerD: 
     answerE: 
-  lastQotdTimestamp: 1785075272
+  lastQotdTimestamp: 1789389371
   lastDynamicHeaderResponse:
-    topImageUrl: https://codemonkeyexternal.blob.core.windows.net/external/Misc/summer2025CodeMonkeyBundle.png
-    topText: Get 80% OFF on ALL my Courses and Games!!!
-    topLink: summerbundle
-    bottomText: DONT MISS the latest important trends, sign up for my FREE Weekly
-      Newsletter!
-    bottomLink: gamedevreport
-  lastDynamicHeaderTimestamp: 1785075272
+    topImageUrl: https://codemonkeyexternal.blob.core.windows.net/external/Misc/humbleSep26Maksym.png
+    topText: AWESOME Characters and Weapons 98% OFF! (Modern, Medieval, Fantasy,
+      Sci-Fi, etc)
+    topLink: humblebundle
+    bottomText: Escape Tutorial Hell and level up your skills, try my Practice Lab
+      for FREE!
+    bottomLink: practicelab
+  lastDynamicHeaderTimestamp: 1789389371
   websiteLatestMessage:
     text: <a href="https://cmonkey.co/freecourses">Check out all my FREE courses!
       Click here!</a>
-  websiteLatestMessageTimestamp: 1785075272
+  websiteLatestMessageTimestamp: 1789389371
   websiteLatestVideos:
     videos:
-    - youTubeId: _0Lp-iXEhfU
-      title: Join my Game Dev Practice Lab for FREE!
-    - youTubeId: 2dyD9yWWtCU
-      title: Unity 7 is RE-ANNOUNCED!
-    - youTubeId: -qpKrATW4wM
-      title: TOP 10 FREE NEW Assets JULY 2026!
-    - youTubeId: IQlMciGDMTY
-      title: This method helps you find Game Ideas that make MILLIONS!
-  websiteLatestVideosTimestamp: 1785075272
+    - youTubeId: QNXgOuo7-Iw
+      title: TOP 10 FREE NEW Assets SEPTEMBER 2026!
+    - youTubeId: xhOkkGbL3mY
+      title: How to Make your game look AWESOME! (Unity Lighting and Post Processing
+        Tutorial)
+    - youTubeId: HOm1VQLKhX8
+      title: Unity 6.6 is here and it has 3 MASSIVE IMPROVEMENTS!
+    - youTubeId: 8xj9IEFRgKo
+      title: THIS is how you go from BEGINNER to ADVANCED!
+  websiteLatestVideosTimestamp: 1789389371
