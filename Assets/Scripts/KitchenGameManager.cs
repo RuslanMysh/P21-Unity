@@ -9,7 +9,7 @@ public class KitchenGameManager : MonoBehaviour
     public event EventHandler OnGamePaused;
     public event EventHandler OnGameUnpaused;
 
-   private enum State
+    private enum State
     {
         WaitingToStart,
         CountdownToStart,
@@ -21,7 +21,9 @@ public class KitchenGameManager : MonoBehaviour
     private float waitingToStartTimer = 1f;
     private float countdownToStartTimer = 3f;
     private float gamePlayingTimer;
-    private float gamePlayingTimerMax = 20f;
+    [SerializeField] private float gamePlayingTimerMax = 90f;
+    [SerializeField] private float deliveryBonusTime = 4f;
+    [SerializeField] private float deliveryBonusTimeMax = 12f;
     private bool isGamePaused;
 
     private void Awake()
@@ -32,7 +34,7 @@ public class KitchenGameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Ѕольше одного GameManager!");
+            Debug.LogError("More than one GameManager!");
         }
 
         state = State.WaitingToStart;
@@ -42,6 +44,15 @@ public class KitchenGameManager : MonoBehaviour
     private void Start()
     {
         GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
+        DeliveryManager.Instance.OnRecipeSuccess += DeliveryManager_OnRecipeSuccess;
+    }
+
+    private void DeliveryManager_OnRecipeSuccess(object sender, EventArgs e)
+    {
+        if (!IsGamePlaying()) return;
+
+        float bonus = Mathf.Min(deliveryBonusTime, deliveryBonusTimeMax - 0.01f);
+        gamePlayingTimer = Mathf.Min(gamePlayingTimer + bonus, gamePlayingTimerMax + deliveryBonusTimeMax);
     }
 
     private void GameInput_OnPauseAction(object sender, EventArgs e)
@@ -68,6 +79,7 @@ public class KitchenGameManager : MonoBehaviour
                     state = State.GamePlaying;
                     gamePlayingTimer = gamePlayingTimerMax;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
+                    YandexAdsService.NotifyGameplayStart();
                 }
                 break;
             case State.GamePlaying:
@@ -83,21 +95,47 @@ public class KitchenGameManager : MonoBehaviour
         }
     }
 
+    public void ContinueWithExtraTime(float extraSeconds)
+    {
+        if (state != State.GameOver) return;
+
+        gamePlayingTimer = Mathf.Max(extraSeconds, 1f);
+        state = State.GamePlaying;
+
+        if (isGamePaused)
+        {
+            isGamePaused = false;
+            Time.timeScale = 1f;
+            OnGameUnpaused?.Invoke(this, EventArgs.Empty);
+        }
+
+        OnStateChanged?.Invoke(this, EventArgs.Empty);
+        YandexAdsService.NotifyGameplayStart();
+    }
+
     public void TogglePauseGame()
     {
+        if (state == State.GameOver) return;
+
         isGamePaused = !isGamePaused;
 
         if (isGamePaused)
         {
-            // остановить игру
             OnGamePaused?.Invoke(this, EventArgs.Empty);
             Time.timeScale = 0f;
+            YandexAdsService.NotifyGameplayStop();
+            MusicManager.Instance?.SetPaused(true);
         }
         else
         {
-            // продолжить игру
             OnGameUnpaused?.Invoke(this, EventArgs.Empty);
             Time.timeScale = 1f;
+            if (IsGamePlaying())
+            {
+                YandexAdsService.NotifyGameplayStart();
+            }
+
+            MusicManager.Instance?.SetPaused(false);
         }
     }
 
@@ -123,6 +161,7 @@ public class KitchenGameManager : MonoBehaviour
 
     public float GetGameplayingTimerNormalized()
     {
-        return (gamePlayingTimer / gamePlayingTimerMax);
+        float max = Mathf.Max(gamePlayingTimerMax, gamePlayingTimer);
+        return gamePlayingTimer / max;
     }
 }

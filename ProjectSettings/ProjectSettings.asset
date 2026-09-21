@@ -1,4 +1,4 @@
-%YAML 1.1
+﻿%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!129 &1
 PlayerSettings:
@@ -822,7 +822,10 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Standalone: YandexGamesPlatform_yg;InterstitialAdv_yg;RewardedAdv_yg;RU_YG2
+    WebGL: YandexGamesPlatform_yg;InterstitialAdv_yg;RewardedAdv_yg;RU_YG2
+    Android: YandexGamesPlatform_yg;InterstitialAdv_yg;RewardedAdv_yg;RU_YG2
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

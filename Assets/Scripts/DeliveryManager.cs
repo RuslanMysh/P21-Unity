@@ -6,19 +6,18 @@ public class DeliveryManager : MonoBehaviour
 {
     public event EventHandler OnRecipeSpawned;
     public event EventHandler OnRecipeCompleted;
-
     public event EventHandler OnRecipeSuccess;
     public event EventHandler OnRecipeFailed;
 
     public static DeliveryManager Instance { private set; get; }
 
     [SerializeField] private RecipeListSO recipeListSO;
+    [SerializeField] private float spawnRecipeTimerMax = 5.5f;
+    [SerializeField] private int waitingRecipesMax = 3;
 
     private List<RecipeSO> waitingRecipeSOList;
     private float spawnRecipeTimer;
-    private float spawnRecipeTimerMax = 4f;
-    private int waitingRecipesMax = 4;
-    private int succesfulRecipiesAmount = 0;
+    private int succesfulRecipiesAmount;
 
     private void Awake()
     {
@@ -32,19 +31,23 @@ public class DeliveryManager : MonoBehaviour
         }
 
         waitingRecipeSOList = new List<RecipeSO>();
+        spawnRecipeTimer = 1.25f;
     }
 
     private void Update()
     {
+        if (KitchenGameManager.Instance == null || !KitchenGameManager.Instance.IsGamePlaying()) return;
+
         spawnRecipeTimer -= Time.deltaTime;
         if (spawnRecipeTimer <= 0f)
         {
-            spawnRecipeTimer = spawnRecipeTimerMax;
+            float pace = Mathf.Lerp(spawnRecipeTimerMax, spawnRecipeTimerMax * 0.7f,
+                Mathf.Clamp01(succesfulRecipiesAmount / 10f));
+            spawnRecipeTimer = pace;
 
             if (waitingRecipeSOList.Count < waitingRecipesMax)
             {
                 RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count)];
-              
                 waitingRecipeSOList.Add(waitingRecipeSO);
                 OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
             }
@@ -60,45 +63,33 @@ public class DeliveryManager : MonoBehaviour
             if (waitingRecipeSO.kitchenObjectSOList.Count == plateKitchenObject.GetKitchenObjectSOList().Count)
             {
                 bool platesContentsMatchesRecipe = true;
-                // количество ингредиентов совпадает
                 foreach (KitchenObjectSO kitchenObjectSO in waitingRecipeSO.kitchenObjectSOList)
                 {
                     bool ingredientFound = false;
-                    // пробегаемся по всем ингредиентам в рецепте
                     foreach (KitchenObjectSO plateKitchenObjectSO in plateKitchenObject.GetKitchenObjectSOList())
                     {
-                        // пробегаемся по всем ингредиентам в тарелке
                         if (plateKitchenObjectSO == kitchenObjectSO)
                         {
-                            // ингредиенты совпали!!!
                             ingredientFound = true;
                             break;
                         }
                     }
                     if (!ingredientFound)
                     {
-                        // ингредиент рецепта не был найден на тарелке
                         platesContentsMatchesRecipe = false;
                     }
                 }
-               if (platesContentsMatchesRecipe)
+                if (platesContentsMatchesRecipe)
                 {
-                    Debug.Log("Игрок доставил нужный рецепт!");
                     waitingRecipeSOList.RemoveAt(i);
-
                     succesfulRecipiesAmount++;
-
                     OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
                     OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
-
                     return;
                 }
             }
         }
 
-        // совпадений не найдено
-        // игрок доставил не тот рецепт!
-        Debug.Log("игрок доставил не тот рецепт!");
         OnRecipeFailed?.Invoke(this, EventArgs.Empty);
     }
 

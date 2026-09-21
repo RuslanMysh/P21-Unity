@@ -232,6 +232,7 @@ GameObject:
   - component: {fileID: 434807757}
   - component: {fileID: 434807759}
   - component: {fileID: 434807758}
+  - component: {fileID: 434807760}
   m_Layer: 5
   m_Name: SettingsPanel
   m_TagString: Untagged
@@ -297,6 +298,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 434807756}
   m_CullTransparentMesh: 1
+
+--- !u!114 &434807760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 434807756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1c2d3e4f5a6789012345678abcde003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsUI
+  closeButton: {fileID: 761895181}
+  buildContentIfMissing: 1
 --- !u!1 &568202392
 GameObject:
   m_ObjectHideFlags: 0

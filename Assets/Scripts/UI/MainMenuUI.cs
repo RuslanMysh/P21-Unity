@@ -8,6 +8,9 @@ public class MainMenuUI : MonoBehaviour
     [SerializeField] private Button setButton;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private Button closeSettingsButton;
+
+    private SettingsUI settingsUI;
+
     private void Awake()
     {
         playButton.onClick.AddListener(() =>
@@ -15,19 +18,51 @@ public class MainMenuUI : MonoBehaviour
             Loader.Load(Loader.Scene.GameScene);
         });
 
+        if (settingsPanel != null)
+        {
+            settingsUI = settingsPanel.GetComponent<SettingsUI>();
+            if (settingsUI == null)
+            {
+                settingsUI = settingsPanel.AddComponent<SettingsUI>();
+            }
+        }
+
         setButton.onClick.AddListener(() =>
         {
-            settingsPanel.SetActive(true);
+            if (settingsUI != null)
+            {
+                settingsUI.Show();
+            }
+            else if (settingsPanel != null)
+            {
+                settingsPanel.SetActive(true);
+            }
         });
 
-        closeSettingsButton.onClick.AddListener(() =>
+        if (closeSettingsButton != null)
+        {
+            closeSettingsButton.onClick.AddListener(() =>
+            {
+                if (settingsUI != null)
+                {
+                    settingsUI.Hide();
+                }
+                else if (settingsPanel != null)
+                {
+                    settingsPanel.SetActive(false);
+                }
+            });
+        }
+
+        if (settingsUI != null)
+        {
+            settingsUI.Hide();
+        }
+        else if (settingsPanel != null)
         {
             settingsPanel.SetActive(false);
-        });
+        }
 
-        settingsPanel.SetActive(false);
         Time.timeScale = 1f;
-
-        
     }
 }

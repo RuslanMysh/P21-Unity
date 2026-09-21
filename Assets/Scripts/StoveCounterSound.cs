@@ -6,14 +6,34 @@ public class StoveCounterSound : MonoBehaviour
 
     private AudioSource audioSource;
 
+    private float baseVolume;
+
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
+        baseVolume = audioSource != null ? audioSource.volume : 0.2f;
     }
 
     private void Start()
     {
         stoveCounter.OnStateChanged += StoveCounter_OnStateChanged;
+        ApplyVolume();
+    }
+
+    private void Update()
+    {
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            ApplyVolume();
+        }
+    }
+
+    private void ApplyVolume()
+    {
+        if (audioSource != null)
+        {
+            audioSource.volume = baseVolume * GameSettings.SoundVolume;
+        }
     }
 
     private void StoveCounter_OnStateChanged(object sender, StoveCounter.OnStateChangedEventArgs e)
@@ -22,6 +42,7 @@ public class StoveCounterSound : MonoBehaviour
 
         if (playSound)
         {
+            ApplyVolume();
             audioSource.Play();
         }
         else
