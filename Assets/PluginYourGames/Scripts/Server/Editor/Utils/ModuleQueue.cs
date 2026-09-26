@@ -74,8 +74,7 @@ namespace YG.EditorScr
             else
             {
                 await Task.Delay(100);
-                AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
-                DefineSymbols.ModulesDefineSymbols();
+                AssetDatabase.Refresh();
                 onModuleLoaded?.Invoke();
 
                 if (!VersionControlWindow.isOpenWindow)
@@ -96,45 +95,17 @@ namespace YG.EditorScr
         /// <summary>Добавить модуль в очередь обновлений (если его там ещё нет).</summary>
         public static void AddList(string moduleName, bool addDependencies = true)
         {
-            AddList(ModulesInstaller.GetModuleByName(moduleName), addDependencies, true);
-        }
-
-        public static void AddList(string moduleName, bool addDependencies, bool approveDependencies)
-        {
-            AddList(ModulesInstaller.GetModuleByName(moduleName), addDependencies, approveDependencies);
-        }
-
-        public static void AddList(Module moduleInfo, bool addDependencies = true)
-        {
-            AddList(moduleInfo, addDependencies, true);
-        }
-
-        public static void AddList(Module moduleInfo, bool addDependencies, bool approveDependencies)
-        {
             List<ImportModuleInfo> list = LoadList();
-            string moduleName = moduleInfo?.nameModule;
-
-            if (string.IsNullOrEmpty(moduleName))
-                return;
 
             if (FindByName(list, moduleName) == null)
             {
                 ImportModuleInfo module = new ImportModuleInfo(moduleName);
 
                 if (addDependencies)
-                {
-                    if (approveDependencies && !ModulesInstaller.ApprovalDependencies(moduleInfo))
-                        return;
+                    AddDependenciesRecursive(ModulesInstaller.GetModuleByName(moduleName));
 
-                    AddDependenciesRecursive(moduleInfo);
-                    list = LoadList();
-                }
-
-                if (FindByName(list, moduleName) == null)
-                {
-                    list.Add(module);
-                    SaveList(list);
-                }
+                list.Add(module);
+                SaveList(list);
             }
         }
 
@@ -166,7 +137,7 @@ namespace YG.EditorScr
                 return;
             }
 
-            AddList(module, true);
+            AddList(module.nameModule, true);
             ProcessInstallModulesInTurn();
         }
 
@@ -174,7 +145,7 @@ namespace YG.EditorScr
         {
             List<Module> dependencies = new List<Module>();
 
-            if (module == null || string.IsNullOrEmpty(module.dependencies))
+            if (string.IsNullOrEmpty(module.dependencies))
                 return dependencies;
 
             string depsRaw = module.dependencies ?? string.Empty;
@@ -190,7 +161,7 @@ namespace YG.EditorScr
             {
                 Module depModule = ModulesInstaller.GetModuleByName(depStr);
 
-                if (depModule != null && (string.IsNullOrEmpty(depModule.projectVersion) || !ModulesInstaller.IsModuleCurrentVersion(depModule)))
+                if (!ModulesInstaller.IsModuleCurrentVersion(depModule))
                 {
                     dependencies.Add(depModule);
                 }

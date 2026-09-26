@@ -22,16 +22,6 @@ namespace YG.EditorScr.BuildModify
         private static string indexFile = string.Empty;
         private static string styleFile = string.Empty;
         private static string methodName = string.Empty;
-        private static bool waitUnityBuildSummaryLog = false;
-        private static bool unityBuildSummaryLogSeen = false;
-        private static bool unityLogHookSubscribed = false;
-        private static bool fallbackUpdateSubscribed = false;
-        private static bool postBuildLogEmitted = false;
-        private static double waitStartTime = 0d;
-        private const double FALLBACK_DELAY_SECONDS = 1.0d;
-        private static int pendingBuildNumber = -1;
-        private static List<string> pendingErrors = new List<string>();
-        private static string pendingOpenBuildPath = string.Empty;
         private enum CodeType { HeadNative, BodyNative, JS, Head, Body, Init0, Init1, Init2, Init, Start };
         public static event Action onModifyComplete = null;
 
@@ -94,127 +84,44 @@ namespace YG.EditorScr.BuildModify
                 FileYG.WriteAllText(styleFilePath, styleFile);
 
 #endif
-            QueuePostBuildLog(buildNumber, errors);
-        }
-
-        private static void QueuePostBuildLog(int buildNumber, List<string> errors)
-        {
-            pendingBuildNumber = buildNumber;
-            pendingErrors = errors != null ? new List<string>(errors) : new List<string>();
-            waitUnityBuildSummaryLog = true;
-            unityBuildSummaryLogSeen = false;
-            postBuildLogEmitted = false;
-            waitStartTime = EditorApplication.timeSinceStartup;
-
-            if (!unityLogHookSubscribed)
-            {
-                Application.logMessageReceived += OnEditorLogMessageReceived;
-                unityLogHookSubscribed = true;
-            }
-
-            if (!fallbackUpdateSubscribed)
-            {
-                EditorApplication.update += OnPostBuildFallbackUpdate;
-                fallbackUpdateSubscribed = true;
-            }
-        }
-
-        private static void OnEditorLogMessageReceived(string condition, string stackTrace, LogType type)
-        {
-            if (!waitUnityBuildSummaryLog || type != LogType.Log)
-                return;
-
-            if (!condition.Contains("Build completed with a result of"))
-                return;
-
-            // Emit on the next editor update to keep the log after Unity's summary line.
-            unityBuildSummaryLogSeen = true;
-        }
-
-        private static void OnPostBuildFallbackUpdate()
-        {
-            if (postBuildLogEmitted)
-                return;
-
-            if (unityBuildSummaryLogSeen)
-            {
-                EmitPostBuildLog();
-                return;
-            }
-
-            if (!waitUnityBuildSummaryLog)
-                return;
-
-            if (EditorApplication.timeSinceStartup - waitStartTime < FALLBACK_DELAY_SECONDS)
-                return;
-
-            EmitPostBuildLog();
-        }
-
-        private static void EmitPostBuildLog()
-        {
-            if (postBuildLogEmitted)
-                return;
-
-            postBuildLogEmitted = true;
-            waitUnityBuildSummaryLog = false;
-            unityBuildSummaryLogSeen = false;
-
-            if (unityLogHookSubscribed)
-            {
-                Application.logMessageReceived -= OnEditorLogMessageReceived;
-                unityLogHookSubscribed = false;
-            }
-
-            if (fallbackUpdateSubscribed)
-            {
-                EditorApplication.update -= OnPostBuildFallbackUpdate;
-                fallbackUpdateSubscribed = false;
-            }
-
-#if RU_YG2
-            string logBuildCompleteText = "Сборка завершена!";
-#else
-            string logBuildCompleteText = "Build complete!";
-#endif
-            Debug.Log($"<color=#00FF00>{InfoYG.NAME_PLUGIN} - {logBuildCompleteText}  Platform - {PlatformSettings.currentPlatformBaseName}.  Build number: {pendingBuildNumber}</color>");
-
-            if (InfoYG.instance.Basic.platform == null)
+            EditorApplication.delayCall += () =>
             {
 #if RU_YG2
-                Debug.LogWarning($"<color={WARNING_COLOR}>Обратите внимание!</color> <color={ERROR_COLOR}>В настройках {InfoYG.NAME_PLUGIN} не выбрана платформа. </color><color={WARNING_COLOR}>Проигнорируйте данное сообщение, если вы намеренно оставили поле пустым.</color>");
+                string logBuildCompleteText = "Сборка завершена!";
 #else
-                Debug.LogWarning($"<color={WARNING_COLOR}>Please note!</color> <color={ERROR_COLOR}>In the settings {InfoYG.NAME_PLUGIN} no platform selected. </color><color={WARNING_COLOR}>Ignore this message if you intentionally left the field blank.</color>");
+                string logBuildCompleteText = "Build complete!";
 #endif
-            }
+                Debug.Log($"<color=#00FF00>{InfoYG.NAME_PLUGIN} - {logBuildCompleteText}  Platform - {PlatformSettings.currentPlatformBaseName}.  Build number: {buildNumber}</color>");
 
-            if (pendingErrors.Count > 0)
-            {
-                string errorModulesText = string.Empty;
-
-                for (int i = 0; i < pendingErrors.Count; i++)
+                if (InfoYG.instance.Basic.platform == null)
                 {
-                    errorModulesText += pendingErrors[i];
-
-                    if (i < pendingErrors.Count - 1)
-                        errorModulesText += ", ";
-                }
 #if RU_YG2
-                Debug.LogError($"<color={ERROR_COLOR}>Сборка завершена с ошибкой!</color> Необходимо устранить ошибки, чтобы модули: <color={ERROR_COLOR}>{errorModulesText}</color> - работали исправно.");
+                    Debug.LogWarning($"<color={WARNING_COLOR}>Обратите внимание!</color> <color={ERROR_COLOR}>В настройках {InfoYG.NAME_PLUGIN} не выбрана платформа. </color><color={WARNING_COLOR}>Проигнорируйте данное сообщение, если вы намеренно оставили поле пустым.</color>");
 #else
-                Debug.LogError($"<color={ERROR_COLOR}>The build was completed with an error!</color> It is necessary to eliminate errors so that the <color={ERROR_COLOR}>{errorModulesText}</color> modules work properly.");
+                    Debug.LogWarning($"<color={WARNING_COLOR}>Please note!</color> <color={ERROR_COLOR}>In the settings {InfoYG.NAME_PLUGIN} no platform selected. </color><color={WARNING_COLOR}>Ignore this message if you intentionally left the field blank.</color>");
 #endif
-            }
+                }
 
-            onModifyComplete?.Invoke();
+                if (errors.Count > 0)
+                {
+                    string errorModulesText = string.Empty;
 
-#if UNITY_EDITOR_WIN
-            if (!Application.isBatchMode && !string.IsNullOrEmpty(pendingOpenBuildPath))
-            {
-                Process.Start("explorer.exe", pendingOpenBuildPath.Replace("/", "\\"));
-                pendingOpenBuildPath = string.Empty;
-            }
+                    for (int i = 0; i < errors.Count; i++)
+                    {
+                        errorModulesText += errors[i];
+
+                        if (i < errors.Count - 1)
+                            errorModulesText += ", ";
+                    }
+#if RU_YG2
+                    Debug.LogError($"<color={ERROR_COLOR}>Сборка завершена с ошибкой!</color> Необходимо устранить ошибки, чтобы модули: <color={ERROR_COLOR}>{errorModulesText}</color> - работали исправно.");
+#else
+                    Debug.LogError($"<color={ERROR_COLOR}>The build was completed with an error!</color> It is necessary to eliminate errors so that the <color={ERROR_COLOR}>{errorModulesText}</color> modules work properly.");
 #endif
+                }
+
+                onModifyComplete?.Invoke();
+            };
         }
 
         public static void ModifyIndex()
@@ -227,8 +134,10 @@ namespace YG.EditorScr.BuildModify
             }
             else
             {
-                pendingOpenBuildPath = buildPath;
                 ModifyIndex(buildPath);
+#if UNITY_EDITOR_WIN
+                Process.Start("explorer.exe", buildPath.Replace("/", "\\"));
+#endif
             }
         }
 

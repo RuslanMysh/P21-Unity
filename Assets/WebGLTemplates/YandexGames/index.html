@@ -18,7 +18,6 @@
             padding: 0;
             margin: 0;
             overflow: hidden;
-            overscroll-behavior: none;
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             -khtml-user-select: none;
@@ -119,13 +118,11 @@
         window.addEventListener('blur', () => SetVisibility(false));
         window.addEventListener('focus', () => SetVisibility(true));
 
+
         window.addEventListener('pointerdown', () => {
             FocusGame();
             SetVisibility(true);
         });
-
-        window.addEventListener('resize', () => FocusGame());
-        document.addEventListener('fullscreenchange', () => FocusGame());
 
         const oRequestPointerLock = Element.prototype.requestPointerLock;
         Element.prototype.requestPointerLock = async function hkRequestPointerLock(...args) {
@@ -168,22 +165,8 @@
             window.blurFocusHandlersInstalled = true;
         }
 
-        function FocusGame(checkingPauseStatus = true) {
-            if (!canvas) return;
-
-            requestAnimationFrame(() => {
-                if (checkingPauseStatus && isPausedGame) return;
-
-                const active = document.activeElement;
-                if (active && (active.tagName === 'INPUT' ||
-                    active.tagName === 'TEXTAREA' ||
-                    active.isContentEditable
-                )) {
-                    return;
-                }
-
-                canvas.focus({ preventScroll: true });
-            });
+        function FocusGame() {
+            if (!isPausedGame) canvas.focus();
         }
 
         function SetVisibility(visibility) {
@@ -206,7 +189,6 @@
         const ResumeCallback = () => {
             isPausedGame = false;
             YG2Instance('SetPauseGame', 'false');
-            FocusGame(false);
         };
 
         const script = document.createElement("script");
@@ -222,7 +204,6 @@
                     ygGameInstance = unityInstance;
                     loadingCover.style.background = "";
                     loadingCover.style.display = "none";
-                    FocusGame();
                     // Fill Background [Build Modify]
                 }).catch((message) => {
                     console.error(message);
@@ -288,8 +269,11 @@
             }
         }
 
-        function LogStyledMessage(message, style = 'color: #FFDF73; background-color: #454545') {
+        function LogStyledMessage(message, style) {
             console.log('%c' + message, style);
+        }
+        function LogStyledMessage(message) {
+            console.log('%c' + message, 'color: #FFDF73; background-color: #454545');
         }
 
         async function InitYSDK() {

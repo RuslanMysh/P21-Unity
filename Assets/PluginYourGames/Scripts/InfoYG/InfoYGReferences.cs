@@ -85,16 +85,6 @@ namespace YG
             }
         }
 
-        public static string PATCH_PC_TOOLS
-        {
-            get
-            {
-                string path = Path.Combine(PATCH_PC_YG2, "Tools");
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-                return path;
-            }
-        }
         public static string PATCH_PC_EXAMPLE
         {
             get { return Path.Combine(PATCH_PC_YG2, "Example"); }

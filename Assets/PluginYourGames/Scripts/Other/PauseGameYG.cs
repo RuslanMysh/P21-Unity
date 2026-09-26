@@ -1,4 +1,4 @@
-﻿﻿﻿using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
@@ -24,7 +24,7 @@ namespace YG
 
         public void Setup(bool timeScale, bool audioPause, bool cursor, bool eventSystem)
         {
-            if (!inst)
+            if (inst == null)
             {
                 deleteProcessing = false;
 
@@ -52,7 +52,8 @@ namespace YG
                 {
                     cursorVisible_save = Cursor.visible;
                     cursorLockState_save = Cursor.lockState;
-                    ApplyCursorState(true, CursorLockMode.None);
+                    Cursor.visible = true;
+                    Cursor.lockState = CursorLockMode.None;
                 }
 
                 EventSystemDisable();
@@ -64,59 +65,6 @@ namespace YG
             }
         }
 
-        public static void SetState(
-            float timeScale,
-            bool audioPause,
-            bool cursorVisible,
-            CursorLockMode cursorLockState)
-        {
-            if (inst && inst.editTimeScale)
-                inst.timeScale_save = timeScale;
-            else
-                Time.timeScale = timeScale;
-
-            if (inst && inst.editAudioPause)
-                inst.audioPause_save = audioPause;
-            else
-                AudioListener.pause = audioPause;
-
-            if (inst && inst.editCursor)
-            {
-                inst.cursorVisible_save = cursorVisible;
-                inst.cursorLockState_save = cursorLockState;
-            }
-            else
-            {
-                ApplyCursorState(cursorVisible, cursorLockState);
-            }
-        }
-
-        public static void SetState(
-            float timeScale,
-            bool audioPause,
-            bool cursorEnable)
-        {
-            SetState(
-                timeScale,
-                audioPause,
-                cursorEnable,
-                cursorEnable ? CursorLockMode.None : CursorLockMode.Locked);
-        }
-
-        private static void ApplyCursorState(bool visible, CursorLockMode lockState)
-        {
-            if (lockState == CursorLockMode.None)
-            {
-                Cursor.visible = visible;
-                Cursor.lockState = CursorLockMode.None;
-            }
-            else
-            {
-                Cursor.visible = visible;
-                Cursor.lockState = lockState;
-            }
-        }
-
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             EventSystemDisable();
@@ -124,10 +72,10 @@ namespace YG
 
         private void EventSystemDisable()
         {
-            if (editEventSystem && !eventSystem)
+            if (editEventSystem && eventSystem == null)
             {
                 eventSystem = GameObject.FindAnyObjectByType<EventSystem>();
-                if (eventSystem)
+                if (eventSystem != null)
                 {
                     eventSystem_save = eventSystem.enabled;
                     eventSystem.enabled = false;
@@ -151,7 +99,7 @@ namespace YG
                 Time.timeScale = 0;
             }
 
-            if (editAudioPause && !AudioListener.pause)
+            if (editAudioPause && AudioListener.pause != true)
             {
                 audioPause_save = AudioListener.pause;
                 AudioListener.pause = true;
@@ -159,22 +107,17 @@ namespace YG
 
             if (editCursor)
             {
-                if (!Cursor.visible)
+                if (Cursor.visible != true)
                 {
                     cursorVisible_save = Cursor.visible;
                     Cursor.visible = true;
                 }
-                else if (Cursor.lockState != CursorLockMode.None)
+
+                if (Cursor.lockState != CursorLockMode.None)
                 {
                     cursorLockState_save = Cursor.lockState;
                     Cursor.lockState = CursorLockMode.None;
                 }
-            }
-
-            if (editEventSystem && eventSystem && eventSystem.enabled)
-            {
-                eventSystem_save = eventSystem.enabled;
-                eventSystem.enabled = false;
             }
         }
 
@@ -193,10 +136,11 @@ namespace YG
 
             if (editCursor)
             {
-                ApplyCursorState(cursorVisible_save, cursorLockState_save);
+                Cursor.visible = cursorVisible_save;
+                Cursor.lockState = cursorLockState_save;
             }
 
-            if (editEventSystem && eventSystem)
+            if (editEventSystem && eventSystem != null)
                 eventSystem.enabled = eventSystem_save;
 
             Destroy(gameObject);

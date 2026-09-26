@@ -32,11 +32,10 @@ namespace YG
                         Directory.CreateDirectory(directory);
 
                     AssetDatabase.CreateAsset(infoYG, path);
-                    AssetDatabase.SaveAssets();
                     AssetDatabase.Refresh();
-                    infoRes = AssetDatabase.LoadAssetAtPath<InfoYG>(path);
+                    infoRes = Resources.Load<InfoYG>(NAME_INFOYG_FILE);
 
-                    instance = infoRes != null ? infoRes : infoYG;
+                    instance = infoRes;
 
                     if (EditorUtility.DisplayDialog($"Optimal settings",
                         "Установить оптимальные настройки проекта и плагина для платформы по умолчанию «Яндекс Игры»? (Рекомендуется)\n\nSet the optimal project and plugin settings for the default platform «Yandex Games» platform? (Recommended)",
@@ -59,8 +58,7 @@ namespace YG
                 if (infoRes == null)
                     Debug.LogError($"{NAME_INFOYG_FILE} not found!");
 #endif
-                if (infoRes != null)
-                    instance = infoRes;
+                instance = infoRes;
             }
 
             return instance;
@@ -81,7 +79,7 @@ namespace YG
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
 
-                if (instance.Basic.autoApplySettings)
+                if (YG2.infoYG.Basic.autoApplySettings)
                     instance.Basic.platform.ApplyProjectSettings();
 
                 EditorScr.DefineSymbols.PlatformDefineSymbols();
