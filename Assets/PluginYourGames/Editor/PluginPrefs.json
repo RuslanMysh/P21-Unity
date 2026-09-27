@@ -2,7 +2,7 @@
     "stringPrefs": [
         {
             "key": "SelectModuleToggle_YG2",
-            "value": "PluginYG2;InterstitialAdv;RewardedAdv;EnvirData;Authorization;Storage;PlayerStats;RedefinePlayerPrefs;Leaderboards;Localization;AutoTranslateLangs;Payments;Metrica;Review;StickyAdv;ServerTime;Fullscreen;Flags;OpenURL;TV;GameLabel;QuitGameEvent;Clipboard;BannerAdv;TextGameLoad;SelectModuleToggle_YG2"
+            "value": "RewardedAdv;EnvirData;Authorization;Storage;PlayerStats;Leaderboards;RedefinePlayerPrefs;Localization;AutoTranslateLangs;Payments;Metrica;Review;StickyAdv;ServerTime;Fullscreen;Flags;OpenURL;TV;GameLabel;QuitGameEvent;Clipboard;BannerAdv;TextGameLoad"
         }
     ],
     "intPrefs": [

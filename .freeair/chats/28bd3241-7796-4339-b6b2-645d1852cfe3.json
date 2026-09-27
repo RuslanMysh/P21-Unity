@@ -1,0 +1,13 @@
+﻿{
+  "Version": 1,
+  "Id": "28bd3241-7796-4339-b6b2-645d1852cfe3",
+  "Title": "Untitled",
+  "Started": "2026-09-27T20:45:04.606095+07:00",
+  "Status": "NotStarted",
+  "AgentName": "Openrouter.ai General",
+  "Tools": {
+    "Servers": []
+  },
+  "Context": [],
+  "Contents": []
+}
