@@ -34,6 +34,12 @@ public class MusicManager : MonoBehaviour
         }
     }
 
+    public void Stop()
+    {
+        if (audioSource == null) return;
+        audioSource.Stop();
+    }
+
     public void SetPaused(bool paused)
     {
         if (audioSource == null) return;

@@ -32,6 +32,7 @@ public class GameOverUI : MonoBehaviour
         mainMenuButton.onClick.RemoveAllListeners();
         mainMenuButton.onClick.AddListener(() =>
         {
+            MusicManager.Instance?.Stop();
             YandexAdsService.ShowInterstitial();
             Loader.Load(Loader.Scene.MainMenuScene);
         });

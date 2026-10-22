@@ -46,7 +46,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     {
         if (Instance != null)
         {
-            Debug.LogError("На уровне больше одного игрока! Синглтон сломался");
+            Debug.LogError("пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ! пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
         }
 
         Instance = this;
@@ -82,6 +82,14 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void Update()
     {
+        // Р”РІРёР¶РµРЅРёРµ СЂР°Р·СЂРµС€РµРЅРѕ С‚РѕР»СЊРєРѕ РІРѕ РІСЂРµРјСЏ СЃР°РјРѕР№ РёРіСЂС‹
+        if (!KitchenGameManager.Instance.IsGamePlaying())
+        {
+            IsWalking = false;
+            IsSprinting = false;
+            return;
+        }
+
         HandleMovement();
         HandleInteractions();
     }
@@ -126,52 +134,49 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
         float playerRadius = 0.7f;
         float playerHeight = 2f;
-        float moveDist = speed * Time.deltaTime;
+        float speedModifier = IsSprinting ? sprintModifier : 1f;
+        float moveDist = speed * speedModifier * Time.deltaTime;
 
         bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
             playerRadius, moveDir, moveDist);
 
         IsWalking = moveDir != Vector3.zero;
 
-        //if (!IsWalking) { IsSprinting = false; }
-
         if (!canMove)
         {
-            //пробуем двинуться по X
+            //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ X
             Vector3 moveDirX = new Vector3(moveDir.x, 0f, 0f);
             canMove = moveDir.x != 0 && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
             playerRadius, moveDirX, moveDist);
 
             if (canMove)
             {
-                //можем двигаться только по X
+                //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ X
                 moveDirX = moveDirX.normalized;
                 moveDir = moveDirX;
             }
             else
             {
-                //по X нельзя => пробуем по Z
+                //пїЅпїЅ X пїЅпїЅпїЅпїЅпїЅпїЅ => пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Z
                 Vector3 moveDirZ = new Vector3(0f, 0f, moveDir.z);
                 canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
                 playerRadius, moveDirZ, moveDist);
 
                 if (canMove)
                 {
-                    //можно двигаться только по Z
+                    //пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ Z
                     moveDirZ = moveDirZ.normalized;
                     moveDir = moveDirZ;
                 }
                 else
                 {
-                    //нельзя двигаться никуда
+                    //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
                 }
             }
         }
 
         if (canMove)
         {
-            float speedModifier;
-            speedModifier = IsSprinting ? sprintModifier : 1;
             transform.position += speed * speedModifier * moveDir * Time.deltaTime;
         }
 

@@ -6,8 +6,6 @@ public class KitchenGameManager : MonoBehaviour
     public static KitchenGameManager Instance { get; private set; }
 
     public event EventHandler OnStateChanged;
-    public event EventHandler OnGamePaused;
-    public event EventHandler OnGameUnpaused;
 
     private enum State
     {
@@ -24,7 +22,7 @@ public class KitchenGameManager : MonoBehaviour
     [SerializeField] private float gamePlayingTimerMax = 90f;
     [SerializeField] private float deliveryBonusTime = 4f;
     [SerializeField] private float deliveryBonusTimeMax = 12f;
-    private bool isGamePaused;
+
 
     private void Awake()
     {
@@ -43,7 +41,6 @@ public class KitchenGameManager : MonoBehaviour
 
     private void Start()
     {
-        GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
         DeliveryManager.Instance.OnRecipeSuccess += DeliveryManager_OnRecipeSuccess;
     }
 
@@ -55,10 +52,7 @@ public class KitchenGameManager : MonoBehaviour
         gamePlayingTimer = Mathf.Min(gamePlayingTimer + bonus, gamePlayingTimerMax + deliveryBonusTimeMax);
     }
 
-    private void GameInput_OnPauseAction(object sender, EventArgs e)
-    {
-        TogglePauseGame();
-    }
+
 
     private void Update()
     {
@@ -101,43 +95,13 @@ public class KitchenGameManager : MonoBehaviour
 
         gamePlayingTimer = Mathf.Max(extraSeconds, 1f);
         state = State.GamePlaying;
-
-        if (isGamePaused)
-        {
-            isGamePaused = false;
-            Time.timeScale = 1f;
-            OnGameUnpaused?.Invoke(this, EventArgs.Empty);
-        }
+        Time.timeScale = 1f;
 
         OnStateChanged?.Invoke(this, EventArgs.Empty);
         YandexAdsService.NotifyGameplayStart();
     }
 
-    public void TogglePauseGame()
-    {
-        if (state == State.GameOver) return;
 
-        isGamePaused = !isGamePaused;
-
-        if (isGamePaused)
-        {
-            OnGamePaused?.Invoke(this, EventArgs.Empty);
-            Time.timeScale = 0f;
-            YandexAdsService.NotifyGameplayStop();
-            MusicManager.Instance?.SetPaused(true);
-        }
-        else
-        {
-            OnGameUnpaused?.Invoke(this, EventArgs.Empty);
-            Time.timeScale = 1f;
-            if (IsGamePlaying())
-            {
-                YandexAdsService.NotifyGameplayStart();
-            }
-
-            MusicManager.Instance?.SetPaused(false);
-        }
-    }
 
     public bool IsGamePlaying()
     {
