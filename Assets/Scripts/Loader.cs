@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public static class Loader
@@ -13,6 +14,7 @@ public static class Loader
 
     public static void Load(Scene targetScene)
     {
+        Time.timeScale = 1f;
         Loader.targetScene = targetScene;
 
         SceneManager.LoadScene(Scene.LoadingScene.ToString());

@@ -24,8 +24,12 @@ public class KitchenGameManager : MonoBehaviour
     [SerializeField] private float deliveryBonusTimeMax = 12f;
 
 
+    private float currentGamePlayingTimerMax;
+
     private void Awake()
     {
+        Time.timeScale = 1f;
+
         if (Instance == null)
         {
             Instance = this;
@@ -35,6 +39,7 @@ public class KitchenGameManager : MonoBehaviour
             Debug.LogError("More than one GameManager!");
         }
 
+        currentGamePlayingTimerMax = gamePlayingTimerMax;
         state = State.WaitingToStart;
         OnStateChanged?.Invoke(this, EventArgs.Empty);
     }
@@ -49,10 +54,12 @@ public class KitchenGameManager : MonoBehaviour
         if (!IsGamePlaying()) return;
 
         float bonus = Mathf.Min(deliveryBonusTime, deliveryBonusTimeMax - 0.01f);
-        gamePlayingTimer = Mathf.Min(gamePlayingTimer + bonus, gamePlayingTimerMax + deliveryBonusTimeMax);
+        gamePlayingTimer = Mathf.Min(gamePlayingTimer + bonus, currentGamePlayingTimerMax + deliveryBonusTimeMax);
+        if (gamePlayingTimer > currentGamePlayingTimerMax)
+        {
+            currentGamePlayingTimerMax = gamePlayingTimer;
+        }
     }
-
-
 
     private void Update()
     {
@@ -72,6 +79,7 @@ public class KitchenGameManager : MonoBehaviour
                 {
                     state = State.GamePlaying;
                     gamePlayingTimer = gamePlayingTimerMax;
+                    currentGamePlayingTimerMax = gamePlayingTimerMax;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
                     YandexAdsService.NotifyGameplayStart();
                 }
@@ -81,6 +89,7 @@ public class KitchenGameManager : MonoBehaviour
                 if (gamePlayingTimer < 0f)
                 {
                     state = State.GameOver;
+                    Time.timeScale = 0f;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
                 }
                 break;
@@ -89,19 +98,39 @@ public class KitchenGameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Добавляет секунды к таймеру во время игры (state == GamePlaying).
+    /// </summary>
+    public void AddTime(float extraSeconds)
+    {
+        if (state != State.GamePlaying) return;
+
+        gamePlayingTimer += extraSeconds;
+        if (gamePlayingTimer > currentGamePlayingTimerMax)
+        {
+            currentGamePlayingTimerMax = gamePlayingTimer;
+        }
+    }
+
+    /// <summary>
+    /// Продолжение игры после GameOver с новым таймером.
+    /// </summary>
     public void ContinueWithExtraTime(float extraSeconds)
     {
         if (state != State.GameOver) return;
 
         gamePlayingTimer = Mathf.Max(extraSeconds, 1f);
+        currentGamePlayingTimerMax = gamePlayingTimer;
         state = State.GamePlaying;
         Time.timeScale = 1f;
+
+#if PLUGIN_YG_2
+        YG.YG2.PauseGame(false);
+#endif
 
         OnStateChanged?.Invoke(this, EventArgs.Empty);
         YandexAdsService.NotifyGameplayStart();
     }
-
-
 
     public bool IsGamePlaying()
     {
@@ -125,7 +154,7 @@ public class KitchenGameManager : MonoBehaviour
 
     public float GetGameplayingTimerNormalized()
     {
-        float max = Mathf.Max(gamePlayingTimerMax, gamePlayingTimer);
-        return gamePlayingTimer / max;
+        if (currentGamePlayingTimerMax <= 0f) return 0f;
+        return Mathf.Clamp01(gamePlayingTimer / currentGamePlayingTimerMax);
     }
 }

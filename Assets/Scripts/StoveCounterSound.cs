@@ -5,8 +5,8 @@ public class StoveCounterSound : MonoBehaviour
     [SerializeField] private StoveCounter stoveCounter;
 
     private AudioSource audioSource;
-
     private float baseVolume;
+    private bool isCooking;
 
     private void Awake()
     {
@@ -16,8 +16,30 @@ public class StoveCounterSound : MonoBehaviour
 
     private void Start()
     {
-        stoveCounter.OnStateChanged += StoveCounter_OnStateChanged;
+        if (stoveCounter != null)
+        {
+            stoveCounter.OnStateChanged += StoveCounter_OnStateChanged;
+        }
+
+        if (KitchenGameManager.Instance != null)
+        {
+            KitchenGameManager.Instance.OnStateChanged += KitchenGameManager_OnStateChanged;
+        }
+
         ApplyVolume();
+    }
+
+    private void OnDestroy()
+    {
+        if (stoveCounter != null)
+        {
+            stoveCounter.OnStateChanged -= StoveCounter_OnStateChanged;
+        }
+
+        if (KitchenGameManager.Instance != null)
+        {
+            KitchenGameManager.Instance.OnStateChanged -= KitchenGameManager_OnStateChanged;
+        }
     }
 
     private void Update()
@@ -38,16 +60,35 @@ public class StoveCounterSound : MonoBehaviour
 
     private void StoveCounter_OnStateChanged(object sender, StoveCounter.OnStateChangedEventArgs e)
     {
-        bool playSound = e.state == StoveCounter.State.Frying || e.state == StoveCounter.State.Fried;
+        isCooking = e.state == StoveCounter.State.Frying || e.state == StoveCounter.State.Fried;
+        UpdateSound();
+    }
 
-        if (playSound)
+    private void KitchenGameManager_OnStateChanged(object sender, System.EventArgs e)
+    {
+        UpdateSound();
+    }
+
+    private void UpdateSound()
+    {
+        if (audioSource == null) return;
+
+        bool isGamePlaying = KitchenGameManager.Instance != null && KitchenGameManager.Instance.IsGamePlaying();
+
+        if (isCooking && isGamePlaying)
         {
             ApplyVolume();
-            audioSource.Play();
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
         }
         else
         {
-            audioSource.Pause();
+            if (audioSource.isPlaying)
+            {
+                audioSource.Pause();
+            }
         }
     }
 }
