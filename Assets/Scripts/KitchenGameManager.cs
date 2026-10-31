@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 public class KitchenGameManager : MonoBehaviour
@@ -81,16 +81,23 @@ public class KitchenGameManager : MonoBehaviour
                     gamePlayingTimer = gamePlayingTimerMax;
                     currentGamePlayingTimerMax = gamePlayingTimerMax;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
+                    YandexAdsService.HideStickyBanner(); // скрываем баннер во время игры
                     YandexAdsService.NotifyGameplayStart();
                 }
                 break;
             case State.GamePlaying:
+                if (!PauseMenuUI.IsPaused && Time.timeScale == 0f)
+                {
+                    Time.timeScale = 1f;
+                }
                 gamePlayingTimer -= Time.deltaTime;
                 if (gamePlayingTimer < 0f)
                 {
                     state = State.GameOver;
                     Time.timeScale = 0f;
+                    YandexAdsService.ShowInterstitial(); // interstitial на логичной паузе (конец раунда)
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
+                    YandexAdsService.ShowStickyBanner(); // показываем баннер на экране Game Over
                 }
                 break;
             case State.GameOver:
@@ -125,8 +132,14 @@ public class KitchenGameManager : MonoBehaviour
         Time.timeScale = 1f;
 
 #if PLUGIN_YG_2
+        if (YG.PauseGameYG.inst != null)
+        {
+            YG.PauseGameYG.SetState(1f, false, true);
+        }
         YG.YG2.PauseGame(false);
 #endif
+
+        Time.timeScale = 1f;
 
         OnStateChanged?.Invoke(this, EventArgs.Empty);
         YandexAdsService.NotifyGameplayStart();

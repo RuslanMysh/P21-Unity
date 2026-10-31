@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +18,7 @@ public class PauseMenuUI : MonoBehaviour
     [SerializeField] private Button mainMenuButton;
 
     // ── Состояние ─────────────────────────────────────────────────────────
+    public static bool IsPaused { get; private set; }
     private bool _isPaused;
 
     // ─────────────────────────────────────────────────────────────────────
@@ -40,6 +41,7 @@ public class PauseMenuUI : MonoBehaviour
 
     private void OnDestroy()
     {
+        IsPaused = false;
         if (GameInput.Instance != null)
             GameInput.Instance.OnPauseAction -= OnPauseRequested;
     }
@@ -69,6 +71,7 @@ public class PauseMenuUI : MonoBehaviour
     private void Pause()
     {
         Time.timeScale = 0f;
+        IsPaused = true;
         MusicManager.Instance?.SetPaused(true);
         YandexAdsService.NotifyGameplayStop();
         Show();
@@ -77,6 +80,7 @@ public class PauseMenuUI : MonoBehaviour
     public void Resume()
     {
         _isPaused = false;
+        IsPaused = false;
         Time.timeScale = 1f;
         MusicManager.Instance?.SetPaused(false);
 
@@ -89,6 +93,7 @@ public class PauseMenuUI : MonoBehaviour
     private void GoToMainMenu()
     {
         Time.timeScale = 1f;
+        IsPaused = false;
         MusicManager.Instance?.Stop();
         YandexAdsService.ShowInterstitial();
         Loader.Load(Loader.Scene.MainMenuScene);

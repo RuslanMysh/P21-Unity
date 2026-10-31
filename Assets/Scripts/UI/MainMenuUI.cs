@@ -1,8 +1,8 @@
-using UnityEngine;
+п»їusing UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro; // Для работы с TMP_Dropdown
-using YG;    // Для работы с PluginYG / YG2
+using TMPro; // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ TMP_Dropdown
+using YG;    // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ PluginYG / YG2
 
 public class MainMenuUI : MonoBehaviour
 {
@@ -36,7 +36,7 @@ public class MainMenuUI : MonoBehaviour
             settingsPanel.SetActive(false);
         });
 
-        // Настройка громкости
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         float savedVolume = PlayerPrefs.GetFloat(VOLUME_KEY, 1f);
         SetVolume(savedVolume);
 
@@ -46,23 +46,24 @@ public class MainMenuUI : MonoBehaviour
             volumeSlider.onValueChanged.AddListener(SetVolume);
         }
 
-        // Настройка выбора языка
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         if (languageDropdown != null)
         {
-            // Подписываемся на изменение значения в Dropdown
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ Dropdown
             languageDropdown.onValueChanged.AddListener(OnLanguageChanged);
 
-            // Устанавливаем текущее отображаемое значение в Dropdown на основе текущей локализации YG2
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ Dropdown пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ YG2
             SetDropdownValueFromYG();
         }
 
         settingsPanel.SetActive(false);
         Time.timeScale = 1f;
+        YandexAdsService.ShowStickyBanner(); // Р±Р°РЅРЅРµСЂ РЅР° РіР»Р°РІРЅРѕРј СЌРєСЂР°РЅРµ
     }
 
     private void OnEnable()
     {
-        // Подписываемся на событие смены языка в YG2, чтобы выпадающий список обновлялся при внешней смене языка
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ YG2, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         YG2.onSwitchLang += UpdateDropdownOnLangChange;
     }
 
@@ -78,7 +79,7 @@ public class MainMenuUI : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    // Вызывается при выборе опции из выпадающего списка (Dropdown)
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (Dropdown)
     private void OnLanguageChanged(int index)
     {
         switch (index)
@@ -95,7 +96,7 @@ public class MainMenuUI : MonoBehaviour
         }
     }
 
-    // Синхронизация визуального значения Dropdown с текущей настройкой YG2.lang
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Dropdown пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ YG2.lang
     private void SetDropdownValueFromYG()
     {
         switch (YG2.lang)

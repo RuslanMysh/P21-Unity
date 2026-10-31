@@ -14,20 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentVersion: 1.01
   subtype: kitchenchaos
-  lastShownTimestamp: 1792934478
+  lastShownTimestamp: 1793450503
   lastUpdateResponse:
     version: 1.01
     versionUrl: https://unitycodemonkey.com
-  checkedLastUpdateTimestamp: 1792934478
+  checkedLastUpdateTimestamp: 1793450503
   lastQOTDResponse:
-    questionId: 356
-    questionText: Where are PlayerPrefs actually saved on Windows?
-    answerA: Game install folder
-    answerB: User data
-    answerC: Registry
+    questionId: 358
+    questionText: Which of these are affected when you modify Time.timeScale?
+    answerA: Time.deltaTime, Time.realtimeSinceStartup, Time.unscaledDeltaTime, Time.timeSinceLevelLoad,
+      Time.fixedTime
+    answerB: Time.deltaTime, Time.realtimeSinceStartup, Time.timeSinceLevelLoad,
+      Time.fixedTime
+    answerC: Time.deltaTime, Time.timeSinceLevelLoad, Time.fixedTime
     answerD: 
     answerE: 
-  lastQotdTimestamp: 1792934478
+  lastQotdTimestamp: 1793450503
   lastDynamicHeaderResponse:
     topImageUrl: https://codemonkeyexternal.blob.core.windows.net/external/Misc/codeMonkeyEndOfSummerBundleOct26.png
     topText: Back for a limited time until the END OF SUMMER, 80% OFF all my Courses
@@ -35,19 +37,19 @@ MonoBehaviour:
     topLink: summerbundle
     bottomText: FREE Game Dev Insights every week straight to your inbox!
     bottomLink: gamedevreport
-  lastDynamicHeaderTimestamp: 1792934478
+  lastDynamicHeaderTimestamp: 1793450503
   websiteLatestMessage:
     text: <a href="https://cmonkey.co/freecourses">Check out all my FREE courses!
       Click here!</a>
-  websiteLatestMessageTimestamp: 1792934478
+  websiteLatestMessageTimestamp: 1793450503
   websiteLatestVideos:
     videos:
+    - youTubeId: qWLxYU-jfbc
+      title: "Your Game Works\u2026 Until Someone Else Plays It!"
     - youTubeId: IOpC_qtcV_Q
       title: A new C# version is NOT a new programming language!
     - youTubeId: H05_7PBPbzQ
       title: TOP 10 NEW Games, Made with Unity! (SEPTEMBER 2026)
     - youTubeId: zqxQ7PAeNN4
       title: Unity is FINALLY moving to ONE Render Pipeline!
-    - youTubeId: qjNGL4qQvrQ
-      title: TOP 10 FREE NEW Assets OCTOBER 2026!
-  websiteLatestVideosTimestamp: 1792934478
+  websiteLatestVideosTimestamp: 1793450503

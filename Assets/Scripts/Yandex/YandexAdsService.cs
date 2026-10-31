@@ -1,34 +1,109 @@
 using System;
 using UnityEngine;
-#if InterstitialAdv_yg || RewardedAdv_yg
+#if InterstitialAdv_yg || RewardedAdv_yg || StickyAdv_yg
 using YG;
 #endif
 
 /// <summary>
 /// Thin ads wrapper around PluginYG2. Compiles without modules via stubs.
+///
+/// Placement strategy (Yandex criteria §1.12, §1.16):
+///   • StickyAdv   – shown on Main Menu and Game Over; hidden during gameplay/countdown.
+///   • Interstitial – shown on logical pauses only: Game Over (before result screen),
+///                    transitions back to Main Menu. Timer enforced by the SDK.
+///   • Rewarded    – "+25 sec" offer on Game Over screen; reward granted only AFTER ad closes.
 /// </summary>
 public static class YandexAdsService
 {
     public const string ExtraTimeRewardId = "extra_time";
 
+    // ─── Sticky Banner ────────────────────────────────────────────────────────
+
+    /// <summary>Show the sticky banner (Main Menu / Game Over screens).</summary>
+    public static void ShowStickyBanner()
+    {
+#if StickyAdv_yg
+        YG2.StickyAdActivity(true);
+#else
+        Debug.Log("[Ads] StickyAdv module missing — stub ShowStickyBanner.");
+#endif
+    }
+
+    /// <summary>Hide the sticky banner (during gameplay and countdown).</summary>
+    public static void HideStickyBanner()
+    {
+#if StickyAdv_yg
+        YG2.StickyAdActivity(false);
+#else
+        Debug.Log("[Ads] StickyAdv module missing — stub HideStickyBanner.");
+#endif
+    }
+
+    // ─── Interstitial ─────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Request a full-screen interstitial ad (only shown when the SDK internal
+    /// timer is ready; safe to call on every logical pause transition).
+    /// </summary>
     public static void ShowInterstitial()
     {
 #if InterstitialAdv_yg
         YG2.InterstitialAdvShow();
 #else
-        Debug.Log("[Ads] InterstitialAdv module missing — stub call.");
+        Debug.Log("[Ads] InterstitialAdv module missing — stub ShowInterstitial.");
 #endif
     }
 
+    // ─── Rewarded ─────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Show a rewarded video. The <paramref name="onRewarded"/> callback is
+    /// invoked AFTER the ad window closes to avoid timeScale conflicts with
+    /// PauseGameYG (Yandex SDK sets timeScale=0 while the ad is open).
+    /// </summary>
     public static void ShowRewarded(string rewardId, Action onRewarded)
     {
 #if RewardedAdv_yg
-        YG2.RewardedAdvShow(rewardId, onRewarded);
+        bool gotReward = false;
+        bool adClosed  = false;
+
+        Action tryApplyReward = () =>
+        {
+            if (gotReward && adClosed)
+            {
+                Time.timeScale = 1f;
+                onRewarded?.Invoke();
+                Time.timeScale = 1f;
+            }
+        };
+
+        Action rewardHandler = () =>
+        {
+            gotReward = true;
+            tryApplyReward();
+        };
+
+        Action closeHandler = null;
+        closeHandler = () =>
+        {
+            YG2.onCloseRewardedAdv  -= closeHandler;
+            YG2.onErrorRewardedAdv  -= closeHandler;
+            adClosed = true;
+            tryApplyReward();
+        };
+
+        YG2.onCloseRewardedAdv  += closeHandler;
+        YG2.onErrorRewardedAdv  += closeHandler;
+        YG2.RewardedAdvShow(rewardId, rewardHandler);
 #else
         Debug.Log("[Ads] RewardedAdv module missing — granting reward in editor/stub.");
+        Time.timeScale = 1f;
         onRewarded?.Invoke();
+        Time.timeScale = 1f;
 #endif
     }
+
+    // ─── Gameplay API ─────────────────────────────────────────────────────────
 
     public static void NotifyGameReady()
     {

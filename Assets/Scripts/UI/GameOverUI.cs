@@ -1,4 +1,4 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -58,11 +58,12 @@ public class GameOverUI : MonoBehaviour
             AdvButton.onClick.RemoveAllListeners();
             AdvButton.onClick.AddListener(() =>
             {
+                AdvButton.interactable = false;
                 YandexAdsService.ShowRewarded(YandexAdsService.ExtraTimeRewardId, () =>
                 {
                     KitchenGameManager.Instance.ContinueWithExtraTime(25f);
-                    AdvButton.interactable = false;
                     Hide();
+                    Time.timeScale = 1f;
                 });
             });
         }
@@ -97,6 +98,7 @@ public class GameOverUI : MonoBehaviour
 
     private void Hide()
     {
+        YandexAdsService.HideStickyBanner(); // скрываем баннер при продолжении игры
         Time.timeScale = 1f;
         canvasGroup.alpha = 0f;
         canvasGroup.interactable = false;
