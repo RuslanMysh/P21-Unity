@@ -378,7 +378,7 @@ MonoBehaviour:
     objectName: NameYourObject
     methodName: NameYourMethod
   RewardedAdv:
-    skipInterAdvAfterReward: 0
+    skipInterAdvAfterReward: 1
     labelAdvSimLabel: 0
   ServerTime:
     manualDateSetup: 0
@@ -415,7 +415,7 @@ MonoBehaviour:
     durationAdv: 0.5
     loadAdv: 0
     testFailAds: 0
-    pauseOnFocusGame: 0
+    pauseOnFocusGame: 1
   Templates:
     enableLoadText: 1
     textMarginTop: 15

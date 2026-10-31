@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 public class KitchenGameManager : MonoBehaviour
@@ -23,7 +23,6 @@ public class KitchenGameManager : MonoBehaviour
     [SerializeField] private float deliveryBonusTime = 4f;
     [SerializeField] private float deliveryBonusTimeMax = 12f;
 
-
     private float currentGamePlayingTimerMax;
 
     private void Awake()
@@ -47,6 +46,16 @@ public class KitchenGameManager : MonoBehaviour
     private void Start()
     {
         DeliveryManager.Instance.OnRecipeSuccess += DeliveryManager_OnRecipeSuccess;
+    }
+
+    private void OnDestroy()
+    {
+        if (DeliveryManager.Instance != null)
+        {
+            DeliveryManager.Instance.OnRecipeSuccess -= DeliveryManager_OnRecipeSuccess;
+        }
+
+        YandexAdsService.NotifyGameplayStop();
     }
 
     private void DeliveryManager_OnRecipeSuccess(object sender, EventArgs e)
@@ -81,7 +90,7 @@ public class KitchenGameManager : MonoBehaviour
                     gamePlayingTimer = gamePlayingTimerMax;
                     currentGamePlayingTimerMax = gamePlayingTimerMax;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
-                    YandexAdsService.HideStickyBanner(); // скрываем баннер во время игры
+                    YandexAdsService.HideStickyBanner(); // Hide during gameplay
                     YandexAdsService.NotifyGameplayStart();
                 }
                 break;
@@ -95,9 +104,10 @@ public class KitchenGameManager : MonoBehaviour
                 {
                     state = State.GameOver;
                     Time.timeScale = 0f;
-                    YandexAdsService.ShowInterstitial(); // interstitial на логичной паузе (конец раунда)
+                    YandexAdsService.NotifyGameplayStop(); // Notify Yandex before showing ads/results
+                    YandexAdsService.ShowInterstitial(); // Interstitial on logical pause
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
-                    YandexAdsService.ShowStickyBanner(); // показываем баннер на экране Game Over
+                    YandexAdsService.ShowStickyBanner(); // Show banner on Game Over
                 }
                 break;
             case State.GameOver:
@@ -106,7 +116,7 @@ public class KitchenGameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Добавляет секунды к таймеру во время игры (state == GamePlaying).
+    /// Adds seconds to game timer (state == GamePlaying).
     /// </summary>
     public void AddTime(float extraSeconds)
     {
@@ -120,7 +130,7 @@ public class KitchenGameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Продолжение игры после GameOver с новым таймером.
+    /// Continue game after GameOver with extra seconds.
     /// </summary>
     public void ContinueWithExtraTime(float extraSeconds)
     {

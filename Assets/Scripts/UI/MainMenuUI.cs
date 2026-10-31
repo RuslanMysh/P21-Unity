@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro; // ��� ������ � TMP_Dropdown
-using YG;    // ��� ������ � PluginYG / YG2
+using TMPro;
+#if PLUGIN_YG_2
+using YG;
+#endif
 
 public class MainMenuUI : MonoBehaviour
 {
@@ -21,22 +23,33 @@ public class MainMenuUI : MonoBehaviour
 
     private void Awake()
     {
-        playButton.onClick.AddListener(() =>
+        if (playButton != null)
         {
-            Loader.Load(Loader.Scene.GameScene);
-        });
+            playButton.onClick.AddListener(() =>
+            {
+                playButton.interactable = false;
+                Loader.Load(Loader.Scene.GameScene);
+            });
+        }
 
-        setButton.onClick.AddListener(() =>
+        if (setButton != null)
         {
-            settingsPanel.SetActive(true);
-        });
+            setButton.onClick.AddListener(() =>
+            {
+                if (settingsPanel != null)
+                    settingsPanel.SetActive(true);
+            });
+        }
 
-        closeSettingsButton.onClick.AddListener(() =>
+        if (closeSettingsButton != null)
         {
-            settingsPanel.SetActive(false);
-        });
+            closeSettingsButton.onClick.AddListener(() =>
+            {
+                if (settingsPanel != null)
+                    settingsPanel.SetActive(false);
+            });
+        }
 
-        // ��������� ���������
         float savedVolume = PlayerPrefs.GetFloat(VOLUME_KEY, 1f);
         SetVolume(savedVolume);
 
@@ -46,30 +59,38 @@ public class MainMenuUI : MonoBehaviour
             volumeSlider.onValueChanged.AddListener(SetVolume);
         }
 
-        // ��������� ������ �����
         if (languageDropdown != null)
         {
-            // ������������� �� ��������� �������� � Dropdown
             languageDropdown.onValueChanged.AddListener(OnLanguageChanged);
-
-            // ������������� ������� ������������ �������� � Dropdown �� ������ ������� ����������� YG2
             SetDropdownValueFromYG();
         }
 
-        settingsPanel.SetActive(false);
+        if (settingsPanel != null)
+            settingsPanel.SetActive(false);
+
         Time.timeScale = 1f;
-        YandexAdsService.ShowStickyBanner(); // баннер на главном экране
+        YandexAdsService.ShowStickyBanner();
+    }
+
+    private void Start()
+    {
+        SetDropdownValueFromYG();
     }
 
     private void OnEnable()
     {
-        // ������������� �� ������� ����� ����� � YG2, ����� ���������� ������ ���������� ��� ������� ����� �����
+#if PLUGIN_YG_2
         YG2.onSwitchLang += UpdateDropdownOnLangChange;
+        YG2.onGetSDKData += SetDropdownValueFromYG;
+#endif
     }
 
     private void OnDisable()
     {
+#if PLUGIN_YG_2
         YG2.onSwitchLang -= UpdateDropdownOnLangChange;
+        YG2.onGetSDKData -= SetDropdownValueFromYG;
+#endif
     }
 
     public void SetVolume(float volume)
@@ -79,9 +100,9 @@ public class MainMenuUI : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    // ���������� ��� ������ ����� �� ����������� ������ (Dropdown)
     private void OnLanguageChanged(int index)
     {
+#if PLUGIN_YG_2
         switch (index)
         {
             case 0:
@@ -94,11 +115,14 @@ public class MainMenuUI : MonoBehaviour
                 YG2.SwitchLanguage("tr");
                 break;
         }
+#endif
     }
 
-    // ������������� ����������� �������� Dropdown � ������� ���������� YG2.lang
     private void SetDropdownValueFromYG()
     {
+        if (languageDropdown == null) return;
+
+#if PLUGIN_YG_2
         switch (YG2.lang)
         {
             case "ru":
@@ -111,6 +135,7 @@ public class MainMenuUI : MonoBehaviour
                 languageDropdown.SetValueWithoutNotify(2);
                 break;
         }
+#endif
     }
 
     private void UpdateDropdownOnLangChange(string lang)

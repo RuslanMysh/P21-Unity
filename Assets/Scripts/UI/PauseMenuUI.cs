@@ -1,39 +1,33 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Меню паузы. Все UI-элементы настраиваются через Inspector.
-/// Назначь этот компонент на корневой GameObject меню в сцене.
+/// Pause menu UI controller.
 /// </summary>
 public class PauseMenuUI : MonoBehaviour
 {
-    // ── Inspector ──────────────────────────────────────────────────────────
     [Header("Root")]
-    [Tooltip("GameObject, который будет показан/скрыт при паузе. Обычно — сам этот GameObject или его дочерний контейнер.")]
+    [Tooltip("Panel root GameObject toggled on pause.")]
     [SerializeField] private GameObject pausePanel;
 
     [Header("Buttons")]
     [SerializeField] private Button resumeButton;
     [SerializeField] private Button mainMenuButton;
 
-    // ── Состояние ─────────────────────────────────────────────────────────
     public static bool IsPaused { get; private set; }
     private bool _isPaused;
 
-    // ─────────────────────────────────────────────────────────────────────
     #region Unity Lifecycle
 
     private void Start()
     {
-        // Подписка на кнопки
         if (resumeButton != null)
             resumeButton.onClick.AddListener(Resume);
 
         if (mainMenuButton != null)
             mainMenuButton.onClick.AddListener(GoToMainMenu);
 
-        // Подписка на ввод
         GameInput.Instance.OnPauseAction += OnPauseRequested;
 
         Hide();
@@ -48,7 +42,6 @@ public class PauseMenuUI : MonoBehaviour
 
     #endregion
 
-    // ─────────────────────────────────────────────────────────────────────
     #region Pause Logic
 
     private void OnPauseRequested(object sender, EventArgs e)
@@ -92,16 +85,21 @@ public class PauseMenuUI : MonoBehaviour
 
     private void GoToMainMenu()
     {
+        if (mainMenuButton != null)
+            mainMenuButton.interactable = false;
+
         Time.timeScale = 1f;
         IsPaused = false;
         MusicManager.Instance?.Stop();
-        YandexAdsService.ShowInterstitial();
-        Loader.Load(Loader.Scene.MainMenuScene);
+        YandexAdsService.NotifyGameplayStop();
+        YandexAdsService.ShowInterstitial(() =>
+        {
+            Loader.Load(Loader.Scene.MainMenuScene);
+        });
     }
 
     #endregion
 
-    // ─────────────────────────────────────────────────────────────────────
     #region Visibility
 
     private void Show()

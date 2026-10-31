@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,14 +12,12 @@ public class GameOverUI : MonoBehaviour
 
     private void Awake()
     {
-        // Используем CanvasGroup для скрытия, чтобы объект оставался активным
-        // и подписка на OnStateChanged не терялась
         canvasGroup = GetComponent<CanvasGroup>();
         if (canvasGroup == null)
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
 
         SetupButtons();
-        Hide(); // Скрываем сразу в Awake, до первого кадра
+        Hide();
     }
 
     private void Start()
@@ -35,7 +33,6 @@ public class GameOverUI : MonoBehaviour
         Time.timeScale = 1f;
     }
 
-
     private void SetupButtons()
     {
         if (QuitButton != null)
@@ -43,14 +40,18 @@ public class GameOverUI : MonoBehaviour
             QuitButton.onClick.RemoveAllListeners();
             QuitButton.onClick.AddListener(() =>
             {
+                QuitButton.interactable = false;
                 Time.timeScale = 1f;
-                YandexAdsService.ShowInterstitial();
-                Loader.Load(Loader.Scene.MainMenuScene);
+                YandexAdsService.NotifyGameplayStop();
+                YandexAdsService.ShowInterstitial(() =>
+                {
+                    Loader.Load(Loader.Scene.MainMenuScene);
+                });
             });
         }
         else
         {
-            Debug.LogWarning("GameOverUI: QuitButton не назначена в Inspector!");
+            Debug.LogWarning("GameOverUI: QuitButton is not assigned in Inspector!");
         }
 
         if (AdvButton != null)
@@ -59,12 +60,20 @@ public class GameOverUI : MonoBehaviour
             AdvButton.onClick.AddListener(() =>
             {
                 AdvButton.interactable = false;
-                YandexAdsService.ShowRewarded(YandexAdsService.ExtraTimeRewardId, () =>
-                {
-                    KitchenGameManager.Instance.ContinueWithExtraTime(25f);
-                    Hide();
-                    Time.timeScale = 1f;
-                });
+                YandexAdsService.ShowRewarded(
+                    YandexAdsService.ExtraTimeRewardId,
+                    onRewarded: () =>
+                    {
+                        KitchenGameManager.Instance.ContinueWithExtraTime(25f);
+                        Hide();
+                        Time.timeScale = 1f;
+                    },
+                    onFailed: () =>
+                    {
+                        if (AdvButton != null)
+                            AdvButton.interactable = true;
+                    }
+                );
             });
         }
     }
@@ -91,6 +100,9 @@ public class GameOverUI : MonoBehaviour
     private void Show()
     {
         Time.timeScale = 0f;
+        if (AdvButton != null)
+            AdvButton.interactable = true;
+
         canvasGroup.alpha = 1f;
         canvasGroup.interactable = true;
         canvasGroup.blocksRaycasts = true;
@@ -98,7 +110,7 @@ public class GameOverUI : MonoBehaviour
 
     private void Hide()
     {
-        YandexAdsService.HideStickyBanner(); // скрываем баннер при продолжении игры
+        YandexAdsService.HideStickyBanner(); // Hide sticky banner when leaving game over
         Time.timeScale = 1f;
         canvasGroup.alpha = 0f;
         canvasGroup.interactable = false;
